@@ -695,13 +695,9 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
                     Material& mat=materials[matNam];
 
                     float col[3];
-//                  col[0]=mat.m_Ambient.X;
-//                  col[1]=mat.m_Ambient.Y;
-//                  col[2]=mat.m_Ambient.Z;
-//                  simSetShapeColor(anObj,NULL,0,col);
-                    col[0]=mat.m_Diffuse.X;
-                    col[1]=mat.m_Diffuse.Y;
-                    col[2]=mat.m_Diffuse.Z;
+                    col[0]=std::max<float>(mat.m_Diffuse.X,mat.m_Ambient.X);
+                    col[1]=std::max<float>(mat.m_Diffuse.Y,mat.m_Ambient.Y);
+                    col[2]=std::max<float>(mat.m_Diffuse.Z,mat.m_Ambient.Z);
                     simSetShapeColor(anObj,NULL,0,col); // 0 is diffuse/ambient component now!
                     col[0]=mat.m_Specular.X;
                     col[1]=mat.m_Specular.Y;
