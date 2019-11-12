@@ -21,15 +21,15 @@ private:
     std::vector<VisualScene> m_VisualScenes;
     std::string m_PrimarySceneID;
 
-    Matrix LoadXMLMatrix(tinyxml2::XMLElement* matrix);
-    Translate LoadXMLTranslation(tinyxml2::XMLElement* translation);
-    Rotate LoadXMLRotation(tinyxml2::XMLElement* rotation);
-    Scale  LoadXMLScale(tinyxml2::XMLElement* scale);
-    bool LoadGeometry(tinyxml2::XMLElement* geometryNode,boost::unordered_map <std::string, std::vector<float> >& floatarrays);
-    bool LoadMaterial(tinyxml2::XMLElement* colladaRootNode,const std::string& id); 
-    void LoadScene(tinyxml2::XMLElement* sceneNode);
-    void visitNode(tinyxml2::XMLElement* node,SceneNode* parentNode,std::vector<SceneNode>& rootScene);
-    void LoadFloatArrays(tinyxml2::XMLElement *geometryNode, boost::unordered_map<std::string, std::vector<float> >& map);
+    Matrix LoadXMLMatrix(simExtCollada::tinyxml2::XMLElement* matrix);
+    Translate LoadXMLTranslation(simExtCollada::tinyxml2::XMLElement* translation);
+    Rotate LoadXMLRotation(simExtCollada::tinyxml2::XMLElement* rotation);
+    Scale  LoadXMLScale(simExtCollada::tinyxml2::XMLElement* scale);
+    bool LoadGeometry(simExtCollada::tinyxml2::XMLElement* geometryNode,boost::unordered_map <std::string, std::vector<float> >& floatarrays);
+    bool LoadMaterial(simExtCollada::tinyxml2::XMLElement* colladaRootNode,const std::string& id); 
+    void LoadScene(simExtCollada::tinyxml2::XMLElement* sceneNode);
+    void visitNode(simExtCollada::tinyxml2::XMLElement* node,SceneNode* parentNode,std::vector<SceneNode>& rootScene);
+    void LoadFloatArrays(simExtCollada::tinyxml2::XMLElement *geometryNode, boost::unordered_map<std::string, std::vector<float> >& map);
 public:
     bool  LoadFile(const std::string& filename);
     const std::vector<Mesh>& getMeshes() const; 

@@ -30,7 +30,7 @@ distribution.
 #   include <cstddef>
 #endif
 
-using namespace tinyxml2;
+using namespace simExtCollada::tinyxml2; // quick fix
 using namespace std;
 
 static const char LINE_FEED             = (char)0x0a;           // all line endings are normalized to LF

@@ -7,7 +7,7 @@
 #include "Rotate.h"
 #include "Matrix.h"
 
-using namespace tinyxml2;
+using namespace simExtCollada::tinyxml2;
 
 void COLLADAExporter::SaveSceneNode(XMLElement* parentNode,const SceneNode &scene)
 {
@@ -104,7 +104,7 @@ void COLLADAExporter::SaveSceneNodes(XMLElement* rootNode)
         }
     }
 }
-void COLLADAExporter::SaveSource(tinyxml2::XMLElement* parentNode,const std::vector<vec3>& values,const std::string& sourceid, const std::string& sourcename)
+void COLLADAExporter::SaveSource(simExtCollada::tinyxml2::XMLElement* parentNode,const std::vector<vec3>& values,const std::string& sourceid, const std::string& sourcename)
 {
     XMLDocument *doc = parentNode->GetDocument();
     XMLElement *sourceNode = doc->NewElement("source");
@@ -137,7 +137,7 @@ void COLLADAExporter::SaveSource(tinyxml2::XMLElement* parentNode,const std::vec
     accessor->InsertEndChild(paramY);
     accessor->InsertEndChild(paramZ);
 }
-bool COLLADAExporter::SaveGeometry(tinyxml2::XMLElement* geometriesNode,const Mesh& mesh)
+bool COLLADAExporter::SaveGeometry(simExtCollada::tinyxml2::XMLElement* geometriesNode,const Mesh& mesh)
 {
     XMLDocument *doc = geometriesNode->GetDocument();
     XMLElement* geometry = doc->NewElement("geometry");

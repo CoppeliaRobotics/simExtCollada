@@ -4,7 +4,7 @@
 #include "XMLHelper.h"
 #include "StringHelper.h"
 
-using namespace tinyxml2;
+using namespace simExtCollada::tinyxml2;
 
 Source::Source() : m_UnitCount(0)
 {

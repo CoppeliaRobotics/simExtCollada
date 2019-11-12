@@ -1,8 +1,8 @@
 #include "XMLHelper.h"
 
-using namespace tinyxml2;
+using namespace simExtCollada::tinyxml2;
 
-XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode,const std::string& childName,bool SearchAnyDepth)
+XMLElement *XMLHelper::GetChildElement(simExtCollada::tinyxml2::XMLElement* rootNode,const std::string& childName,bool SearchAnyDepth)
 {
     if(rootNode == NULL) {
         return NULL;
@@ -25,13 +25,13 @@ XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode,const std:
     return NULL;
 }
 
-XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode,const std::string& childName)
+XMLElement *XMLHelper::GetChildElement(simExtCollada::tinyxml2::XMLElement* rootNode,const std::string& childName)
 {
     return GetChildElement(rootNode,childName,false);
 }
 
 
-XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode, const std::string& attributeName,const std::string& attributeValue)
+XMLElement *XMLHelper::GetChildElement(simExtCollada::tinyxml2::XMLElement* rootNode, const std::string& attributeName,const std::string& attributeValue)
 {
     if(rootNode == NULL) {
         return NULL;
@@ -56,7 +56,7 @@ XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode, const std
     return NULL;
 }
 
-XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode, const std::string& childName,const std::string& attributeName,const std::string& attributeValue)
+XMLElement *XMLHelper::GetChildElement(simExtCollada::tinyxml2::XMLElement* rootNode, const std::string& childName,const std::string& attributeName,const std::string& attributeValue)
 {
     if(rootNode == NULL) {
         return NULL;
@@ -81,7 +81,7 @@ XMLElement *XMLHelper::GetChildElement(tinyxml2::XMLElement* rootNode, const std
     return NULL;
 }
 
-std::vector<tinyxml2::XMLElement*> XMLHelper::GetChildElements(tinyxml2::XMLElement* rootNode,const std::string& childName)
+std::vector<simExtCollada::tinyxml2::XMLElement*> XMLHelper::GetChildElements(simExtCollada::tinyxml2::XMLElement* rootNode,const std::string& childName)
 {
     std::vector<XMLElement*> elements;
 
@@ -100,7 +100,7 @@ std::vector<tinyxml2::XMLElement*> XMLHelper::GetChildElements(tinyxml2::XMLElem
     return elements;
 }
 
-bool XMLHelper::GetElementAttribute(tinyxml2::XMLElement* node,const std::string attributeName,std::string& attributeValue)
+bool XMLHelper::GetElementAttribute(simExtCollada::tinyxml2::XMLElement* node,const std::string attributeName,std::string& attributeValue)
 {
     if(node == NULL)
         return false;

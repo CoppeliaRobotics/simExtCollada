@@ -1,6 +1,6 @@
 #include "colladadialog.h"
 #include "ui_colladadialog.h"
-#include "v_repLib.h"
+#include "simLib.h"
 #include <boost/format.hpp>
 #include <vector>
 #include <math.h>
@@ -16,11 +16,11 @@ int animationExportSceneCount=0;
 std::vector<std::pair<std::string,std::string> > materialBindings;
 
 
-void setVrepObjectName(int objectHandle,const char* desiredName)
+void setSimObjectName(int objectHandle,const char* desiredName)
 {
     std::string baseName(desiredName);
     for (int i=0;i<int(baseName.size());i++)
-    { // Objects in V-REP can only contain a-z, A-Z, 0-9, '_' or exaclty one '#' optionally followed by a number
+    { // Objects in CoppeliaSim can only contain a-z, A-Z, 0-9, '_' or exaclty one '#' optionally followed by a number
         char n=baseName[i];
         if ( ((n<'a')||(n>'z')) && ((n<'A')||(n>'Z')) && ((n<'0')||(n>'9')) )
             baseName[i]='_';
@@ -190,7 +190,7 @@ void CColladaDialog::handleCommands()
                     printf("Collada: Reading and parsing the XML file:\n");
                     printf("Collada: %s\nCollada: ...\n",file.c_str());
                     imp.LoadFile(file.c_str());
-                    printf("\nCollada: Finished reading and parsing the XML file.\nCollada: Now extracting items and building objects in V-REP...\n");
+                    printf("\nCollada: Finished reading and parsing the XML file.\nCollada: Now extracting items and building objects in CoppeliaSim...\n");
                     const VisualScene* scene=NULL;
                     for (size_t i=0;i<imp.getVisualScenes().size();i++)
                     {
@@ -250,7 +250,7 @@ void CColladaDialog::handleCommands()
                         if ((verticesP!=NULL)&&(vertices.size()!=0)&&(indices.size()!=0))
                         { // we have a single shape to add (because otherwise it would be too heavy/too many objects):
                             int anObj=simCreateMeshShape(2,20.0f*3.1415f/180.0f,&vertices[0],(int)vertices.size(),&indices[0],(int)indices.size(),NULL);
-                            setVrepObjectName(anObj,"ColladaImportedShape_merged");
+                            setSimObjectName(anObj,"ColladaImportedShape_merged");
                         }
                     }
                     else
@@ -592,7 +592,7 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
                 C3Vector euler(vm.M.getEulerAngles());
                 simSetObjectOrientation(jh,-1,euler.data);
                 simSetObjectParent(jh,parentObjectID,true);
-                setVrepObjectName(jh,"colladaTransformationNode");
+                setSimObjectName(jh,"colladaTransformationNode");
                 parentObjectID=jh;
             }
 
@@ -627,7 +627,7 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
                 C3Vector euler(vm.M.getEulerAngles());
                 simSetObjectOrientation(jh,-1,euler.data);
                 simSetObjectParent(jh,parentObjectID,true);
-                setVrepObjectName(jh,"colladaTransformationNode");
+                setSimObjectName(jh,"colladaTransformationNode");
                 parentObjectID=jh;
             }
 
@@ -798,7 +798,7 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
             if (theObjectHandle!=-1)
             {
                 simSetObjectParent(theObjectHandle,parentObjectID,true);
-                setVrepObjectName(theObjectHandle,node->getName().c_str());
+                setSimObjectName(theObjectHandle,node->getName().c_str());
             }
         }
     }
@@ -818,7 +818,7 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
             C3Vector euler(vm.M.getEulerAngles());
             simSetObjectOrientation(theObjectHandle,-1,euler.data);
             simSetObjectParent(theObjectHandle,parentObjectID,true);
-            setVrepObjectName(theObjectHandle,node->getName().c_str());
+            setSimObjectName(theObjectHandle,node->getName().c_str());
         }
     }
     for (size_t i=0;i<node->getChildren().size();i++)
@@ -1041,7 +1041,7 @@ int CColladaDialog::importSingleGroupedShape(const char* pathAndFile,bool preser
         printf("Collada: Reading and parsing the XML file:\n");
         printf("Collada: %s\nCollada: ...\n",file.c_str());
         imp.LoadFile(file.c_str());
-        printf("\nCollada: Finished reading and parsing the XML file.\nCollada: Now extracting items and building a single shape in V-REP...\n");
+        printf("\nCollada: Finished reading and parsing the XML file.\nCollada: Now extracting items and building a single shape in CoppeliaSim...\n");
         const VisualScene* scene=NULL;
         for (int i=0;i<int(imp.getVisualScenes().size());i++)
         {
@@ -1111,7 +1111,7 @@ int CColladaDialog::importSingleGroupedShape(const char* pathAndFile,bool preser
             if ((verticesP!=NULL)&&(vertices.size()!=0)&&(indices.size()!=0))
             { // we have a single shape to add
                 int anObj=simCreateMeshShape(2,20.0f*3.1415f/180.0f,&vertices[0],(int)vertices.size(),&indices[0],(int)indices.size(),NULL);
-                setVrepObjectName(anObj,"ColladaImportedShape_merged");
+                setSimObjectName(anObj,"ColladaImportedShape_merged");
             }
 
             // Now group all shapes that were not present in the scene previously, and erase all other objects (normaly none):

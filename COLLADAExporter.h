@@ -25,11 +25,11 @@ private:
 
     std::string m_PrimarySceneID;
 
-    void SaveSceneNode(tinyxml2::XMLElement* parentNode,const SceneNode& scene);
-    void SaveSceneNodes(tinyxml2::XMLElement* rootNode);
-    void SaveMaterials(tinyxml2::XMLElement *rootNode);
-    void SaveSource(tinyxml2::XMLElement* parentNode,const std::vector<vec3>& values,const std::string& sourceid,const std::string& sourcename);
-    bool SaveGeometry(tinyxml2::XMLElement* geometriesNode,const Mesh& mesh);
+    void SaveSceneNode(simExtCollada::tinyxml2::XMLElement* parentNode,const SceneNode& scene);
+    void SaveSceneNodes(simExtCollada::tinyxml2::XMLElement* rootNode);
+    void SaveMaterials(simExtCollada::tinyxml2::XMLElement *rootNode);
+    void SaveSource(simExtCollada::tinyxml2::XMLElement* parentNode,const std::vector<vec3>& values,const std::string& sourceid,const std::string& sourcename);
+    bool SaveGeometry(simExtCollada::tinyxml2::XMLElement* geometriesNode,const Mesh& mesh);
 
 public: 
 

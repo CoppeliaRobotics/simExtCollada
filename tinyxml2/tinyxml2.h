@@ -102,6 +102,8 @@ static const int TIXML2_MAJOR_VERSION = 1;
 static const int TIXML2_MINOR_VERSION = 0;
 static const int TIXML2_PATCH_VERSION = 8;
 
+namespace simExtCollada // quick fix
+{
 namespace tinyxml2
 {
 class XMLDocument;
@@ -1886,6 +1888,7 @@ private:
 
 
 }   // tinyxml2
+}   // simExtCollada
 
 
 #endif // TINYXML2_INCLUDED

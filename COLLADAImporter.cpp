@@ -9,9 +9,9 @@
 #include "Mesh.h"
 #include "mat4.h"
 
-using namespace tinyxml2;
+using namespace simExtCollada::tinyxml2;
 
-Matrix COLLADAImporter::LoadXMLMatrix(tinyxml2::XMLElement* matrix)
+Matrix COLLADAImporter::LoadXMLMatrix(simExtCollada::tinyxml2::XMLElement* matrix)
 {
     XMLText* text = matrix->FirstChild()->ToText();
     if(text == NULL)
@@ -38,7 +38,7 @@ Matrix COLLADAImporter::LoadXMLMatrix(tinyxml2::XMLElement* matrix)
     mat(3,3) = elements[15];
     return Matrix(mat);
 }
-Translate COLLADAImporter::LoadXMLTranslation(tinyxml2::XMLElement* translation)
+Translate COLLADAImporter::LoadXMLTranslation(simExtCollada::tinyxml2::XMLElement* translation)
 {
     XMLText* text = translation->FirstChild()->ToText();
     if(text == NULL)
@@ -49,7 +49,7 @@ Translate COLLADAImporter::LoadXMLTranslation(tinyxml2::XMLElement* translation)
     vec3 t(elements[0],elements[1],elements[2]);
     return Translate(t);
 }
-Rotate COLLADAImporter::LoadXMLRotation(tinyxml2::XMLElement* rotation)
+Rotate COLLADAImporter::LoadXMLRotation(simExtCollada::tinyxml2::XMLElement* rotation)
 {
     XMLText* text = rotation->FirstChild()->ToText();
     if(text == NULL)
@@ -60,7 +60,7 @@ Rotate COLLADAImporter::LoadXMLRotation(tinyxml2::XMLElement* rotation)
     vec3 axis(elements[0],elements[1],elements[2]); 
     return Rotate(axis,elements[3]);
 }
-Scale COLLADAImporter::LoadXMLScale(tinyxml2::XMLElement* scale)
+Scale COLLADAImporter::LoadXMLScale(simExtCollada::tinyxml2::XMLElement* scale)
 {
     XMLText* text = scale->FirstChild()->ToText();
     if(text == NULL)

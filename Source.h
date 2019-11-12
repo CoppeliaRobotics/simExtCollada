@@ -22,5 +22,5 @@ public:
     int getUnitCount() const;
     void setUnitCount(int Count);
 
-    bool parseXML(tinyxml2::XMLElement *sourceNode,boost::unordered_map<std::string, std::vector<float> >& floatarrays);
+    bool parseXML(simExtCollada::tinyxml2::XMLElement *sourceNode,boost::unordered_map<std::string, std::vector<float> >& floatarrays);
 };

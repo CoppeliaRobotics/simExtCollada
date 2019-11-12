@@ -1,5 +1,5 @@
-#include "v_repExtCollada.h"
-#include "v_repLib.h"
+#include "simExtCollada.h"
+#include "simLib.h"
 #include <iostream>
 #include "colladadialog.h"
 
@@ -14,14 +14,14 @@
 
 #define PLUGIN_VERSION 6 // 6 since 25/7/2016 (multiple file import), 5 since 14/12/2015 (headless mode detect), 4 since 14/5/2015, 3 since 26/11/2014, 2 since 10/1/2014 (new lock)
 
-LIBRARY vrepLib;
+LIBRARY simLib;
 CColladaDialog* colladaDialog=NULL;
 
 
 // This is the plugin start routine (called just once, just after the plugin was loaded):
-VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
+SIM_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
 {
-    // Dynamically load and bind V-REP functions:
+    // Dynamically load and bind CoppeliaSim functions:
      // ******************************************
      // 1. Figure out this plugin's directory:
      char curDirAndFile[1024];
@@ -31,49 +31,49 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
      getcwd(curDirAndFile, sizeof(curDirAndFile));
  #endif
      std::string currentDirAndPath(curDirAndFile);
-     // 2. Append the V-REP library's name:
+     // 2. Append the CoppeliaSim library's name:
      std::string temp(currentDirAndPath);
  #ifdef _WIN32
-     temp+="/v_rep.dll";
+     temp+="/coppeliaSim.dll";
  #elif defined (__linux)
-     temp+="/libv_rep.so";
+     temp+="/libcoppeliaSim.so";
  #elif defined (__APPLE__)
-     temp+="/libv_rep.dylib";
+     temp+="/libcoppeliaSim.dylib";
  #endif /* __linux || __APPLE__ */
-    // 3. Load the V-REP library:
-    vrepLib=loadVrepLibrary(temp.c_str());
-    if (vrepLib==NULL)
+    // 3. Load the CoppeliaSim library:
+    simLib=loadSimLibrary(temp.c_str());
+    if (simLib==NULL)
     {
-        std::cout << "Error, could not find or correctly load the V-REP library. Cannot start 'Collada' plugin.\n";
-        return(0); // Means error, V-REP will unload this plugin
+        std::cout << "Error, could not find or correctly load the CoppeliaSim library. Cannot start 'Collada' plugin.\n";
+        return(0); // Means error, CoppeliaSim will unload this plugin
     }
-    if (getVrepProcAddresses(vrepLib)==0)
+    if (getSimProcAddresses(simLib)==0)
     {
-        std::cout << "Error, could not find all required functions in the V-REP library. Cannot start 'Collada' plugin.\n";
-        unloadVrepLibrary(vrepLib);
-        return(0); // Means error, V-REP will unload this plugin
-    }
-    // ******************************************
-
-    // Check the version of V-REP:
-    // ******************************************
-    int vrepVer;
-    simGetIntegerParameter(sim_intparam_program_version,&vrepVer);
-    if (vrepVer<20604) // if V-REP version is smaller than 2.06.04
-    {
-        std::cout << "Sorry, your V-REP copy is somewhat old. Cannot start 'Collada' plugin.\n";
-        unloadVrepLibrary(vrepLib);
-        return(0); // Means error, V-REP will unload this plugin
+        std::cout << "Error, could not find all required functions in the CoppeliaSim library. Cannot start 'Collada' plugin.\n";
+        unloadSimLibrary(simLib);
+        return(0); // Means error, CoppeliaSim will unload this plugin
     }
     // ******************************************
 
-    // Check if V-REP runs in headless mode:
+    // Check the version of CoppeliaSim:
+    // ******************************************
+    int simVer;
+    simGetIntegerParameter(sim_intparam_program_version,&simVer);
+    if (simVer<20604) // if CoppeliaSim version is smaller than 2.06.04
+    {
+        std::cout << "Sorry, your CoppeliaSim copy is somewhat old. Cannot start 'Collada' plugin.\n";
+        unloadSimLibrary(simLib);
+        return(0); // Means error, CoppeliaSim will unload this plugin
+    }
+    // ******************************************
+
+    // Check if CoppeliaSim runs in headless mode:
     // ******************************************
     if (simGetBooleanParameter(sim_boolparam_headless)>0)
     {
-        std::cout << "V-REP runs in headless mode. Cannot start 'Collada' plugin.\n";
-        unloadVrepLibrary(vrepLib);
-        return(0); // Means error, V-REP will unload this plugin
+        std::cout << "CoppeliaSim runs in headless mode. Cannot start 'Collada' plugin.\n";
+        unloadSimLibrary(simLib);
+        return(0); // Means error, CoppeliaSim will unload this plugin
     }
     // ******************************************
 
@@ -85,16 +85,16 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
     return(PLUGIN_VERSION); // initialization went fine, we return the version number of this plugin (can be queried with simGetModuleName)
 }
 
-// This is the plugin end routine (called just once, when V-REP is ending, i.e. releasing this plugin):
-VREP_DLLEXPORT void v_repEnd()
+// This is the plugin end routine (called just once, when CoppeliaSim is ending, i.e. releasing this plugin):
+SIM_DLLEXPORT void simEnd()
 {
     // Here you could handle various clean-up tasks
     delete colladaDialog;
-    unloadVrepLibrary(vrepLib); // release the library
+    unloadSimLibrary(simLib); // release the library
 }
 
-// This is the plugin messaging routine (i.e. V-REP calls this function very often, with various messages):
-VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customData,int* replyData)
+// This is the plugin messaging routine (i.e. CoppeliaSim calls this function very often, with various messages):
+SIM_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,int* replyData)
 { // This is called quite often. Just watch out for messages/events you want to handle
     // Keep following 6 lines at the beginning and unchanged:
     static bool refreshDlgFlag=true;
@@ -103,12 +103,12 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
     simSetIntegerParameter(sim_intparam_error_report_mode,sim_api_errormessage_ignore);
     void* retVal=NULL;
 
-    // Here we can intercept many messages from V-REP (actually callbacks).
+    // Here we can intercept many messages from CoppeliaSim (actually callbacks).
     // For a complete list of messages that you can intercept/react with, search for "sim_message_eventcallback"-type constants
-    // in the V-REP user manual.
+    // in the CoppeliaSim user manual.
 
     if (message==sim_message_eventcallback_refreshdialogs)
-        refreshDlgFlag=true; // V-REP dialogs were refreshed. Maybe a good idea to refresh this plugin's dialog too
+        refreshDlgFlag=true; // CoppeliaSim dialogs were refreshed. Maybe a good idea to refresh this plugin's dialog too
 
     if (message==sim_message_eventcallback_menuitemselected)
     { // A custom menu bar entry was selected..
@@ -127,7 +127,7 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
     }
 
     if (message==sim_message_eventcallback_instancepass)
-    { // It is important to always correctly react to events in V-REP. This message is the most convenient way to do so:
+    { // It is important to always correctly react to events in CoppeliaSim. This message is the most convenient way to do so:
         colladaDialog->handleCommands();
         colladaDialog->setSimulationStopped(simGetSimulationState()==sim_simulation_stopped);
 
