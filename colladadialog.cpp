@@ -154,6 +154,9 @@ void CColladaDialog::addCommand(SSimulationThreadCommand cmd)
 
 void CColladaDialog::handleCommands()
 { // Called from the main SIM thread
+    int verbosity=sim_verbosity_warnings;
+    simGetInt32Parameter(sim_intparam_verbosity,&verbosity);
+
     for (size_t cmdi=0;cmdi<_simulThreadCommands.size();cmdi++)
     {
         SSimulationThreadCommand cmd=_simulThreadCommands[cmdi];
@@ -187,10 +190,14 @@ void CColladaDialog::handleCommands()
                     }
 
                     COLLADAImporter imp;
-                    printf("Collada: Reading and parsing the XML file:\n");
-                    printf("Collada: %s\nCollada: ...\n",file.c_str());
+                    if (verbosity>=sim_verbosity_infos)
+                    {
+                        printf("Collada plugin: reading and parsing the XML file:\n");
+                        printf("Collada plugin: %s\nCollada plugin: ...\n",file.c_str());
+                    }
                     imp.LoadFile(file.c_str());
-                    printf("\nCollada: Finished reading and parsing the XML file.\nCollada: Now extracting items and building objects in CoppeliaSim...\n");
+                    if (verbosity>=sim_verbosity_infos)
+                        printf("\nCollada plugin: finished reading and parsing the XML file.\nCollada plugin: now extracting items and building objects in CoppeliaSim...\n");
                     const VisualScene* scene=NULL;
                     for (size_t i=0;i<imp.getVisualScenes().size();i++)
                     {
@@ -542,6 +549,8 @@ int CColladaDialog::getVertices(const COLLADAImporter* importer,const mat4& pare
 
 bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& parentMatrix,int parentObjectID,const SceneNode* node,float jointAndDummySizes,bool onlyShapes,std::vector<float>* _allVert,std::vector<int>* _allInd,float importScale)
 {
+    int verbosity=sim_verbosity_warnings;
+    simGetInt32Parameter(sim_intparam_verbosity,&verbosity);
     bool foundErrors=false;
     const std::string meshID(node->getMeshID());
     const Mesh* mesh=NULL;
@@ -672,7 +681,8 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
             }
             if ((_allInd==NULL)&&(vertices.size()>0)&&(indices.size()>0))
             {
-                printf("Building a shape... ");
+                if (verbosity>=sim_verbosity_infos)
+                    printf("Collada plugin: building a shape... ");
                 int anObj=simCreateMeshShape(2,20.0f*3.1415f/180.0f,&vertices[0],(int)vertices.size(),&indices[0],(int)indices.size(),NULL);
                 if (i==0)
                     theObjectHandle=anObj;
@@ -708,7 +718,8 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
                     col[2]=mat.m_Emmission.Z;
                     simSetShapeColor(anObj,NULL,3,col);
                 }
-                printf("done!\n");
+                if (verbosity>=sim_verbosity_infos)
+                    printf("Collada plugin: done!\n");
             }
         }
         for (size_t i=0;i<mesh->getPolygonGroups().size();i++)
@@ -738,7 +749,8 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
 
             if ((_allInd==NULL)&&(vertices.size()>0)&&(indices.size()>0))
             {
-                printf("Building a shape... ");
+                if (verbosity>=sim_verbosity_infos)
+                    printf("Collada plugin: building a shape... ");
                 int anObj=simCreateMeshShape(2,20.0f*3.1415f/180.0f,&vertices[0],(int)vertices.size(),&indices[0],(int)indices.size(),NULL);
                 if (i==0)
                     theObjectHandle=anObj;
@@ -779,7 +791,8 @@ bool CColladaDialog::addNodeToScene(const COLLADAImporter* importer,const mat4& 
                     col[2]=mat.m_Emmission.Z;
                     simSetShapeColor(anObj,NULL,3,col);
                 }
-                printf("done!\n");
+                if (verbosity>=sim_verbosity_infos)
+                    printf("Collada plugin: done!\n");
             }
         }
 
@@ -1033,15 +1046,21 @@ void CColladaDialog::addAllMeshesToExporter(COLLADAExporter* exp)
 
 int CColladaDialog::importSingleGroupedShape(const char* pathAndFile,bool preserveColors,float scaling)
 {
+    int verbosity=sim_verbosity_warnings;
+    simGetInt32Parameter(sim_intparam_verbosity,&verbosity);
     int retVal=-1;
     if (pathAndFile!=NULL)
     {
         std::string file(pathAndFile);
         COLLADAImporter imp;
-        printf("Collada: Reading and parsing the XML file:\n");
-        printf("Collada: %s\nCollada: ...\n",file.c_str());
+        if (verbosity>=sim_verbosity_infos)
+        {
+            printf("Collada plugin: reading and parsing the XML file:\n");
+            printf("Collada plugin: %s\nCollada plugin: ...\n",file.c_str());
+        }
         imp.LoadFile(file.c_str());
-        printf("\nCollada: Finished reading and parsing the XML file.\nCollada: Now extracting items and building a single shape in CoppeliaSim...\n");
+        if (verbosity>=sim_verbosity_infos)
+            printf("\nCollada plugin: Finished reading and parsing the XML file.\nCollada plugin: now extracting items and building a single shape in CoppeliaSim...\n");
         const VisualScene* scene=NULL;
         for (int i=0;i<int(imp.getVisualScenes().size());i++)
         {
@@ -1145,11 +1164,17 @@ int CColladaDialog::importSingleGroupedShape(const char* pathAndFile,bool preser
             }
         }
         if (!loadSuccess)
-            printf("Failed importing the file.\n");
+        {
+            if (verbosity>=sim_verbosity_errors)
+                printf("Collada plugin: failed importing the file.\n");
+        }
         else
         {
             if (foundErrors)
-                printf("Found errors while importing the file.\n");
+            {
+                if (verbosity>=sim_verbosity_errors)
+                    printf("Collada plugin: found errors while importing the file.\n");
+            }
         }
     }
     return(retVal);
