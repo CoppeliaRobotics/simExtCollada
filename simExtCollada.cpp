@@ -43,12 +43,12 @@ SIM_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
     simLib=loadSimLibrary(temp.c_str());
     if (simLib==NULL)
     {
-        CColladaDialog::outputMsg(sim_verbosity_errors,"Collada plugin error: could not find or correctly load the CoppeliaSim library. Cannot start 'Collada' plugin.");
+        CColladaDialog::outputMsg(sim_verbosity_errors,"simExtCollada: error: could not find or correctly load the CoppeliaSim library. Cannot start 'Collada' plugin.");
         return(0); // Means error, CoppeliaSim will unload this plugin
     }
     if (getSimProcAddresses(simLib)==0)
     {
-        CColladaDialog::outputMsg(sim_verbosity_errors,"Collada plugin error: could not find all required functions in the CoppeliaSim library. Cannot start 'Collada' plugin.");
+        CColladaDialog::outputMsg(sim_verbosity_errors,"simExtCollada: error: could not find all required functions in the CoppeliaSim library. Cannot start 'Collada' plugin.");
         unloadSimLibrary(simLib);
         return(0); // Means error, CoppeliaSim will unload this plugin
     }
@@ -60,7 +60,7 @@ SIM_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
     simGetIntegerParameter(sim_intparam_program_version,&simVer);
     if (simVer<20604) // if CoppeliaSim version is smaller than 2.06.04
     {
-        CColladaDialog::outputMsg(sim_verbosity_errors,"Collada plugin error: sorry, your CoppeliaSim copy is somewhat old. Cannot start 'Collada' plugin.");
+        CColladaDialog::outputMsg(sim_verbosity_errors,"simExtCollada: error: sorry, your CoppeliaSim copy is somewhat old. Cannot start 'Collada' plugin.");
         unloadSimLibrary(simLib);
         return(0); // Means error, CoppeliaSim will unload this plugin
     }
@@ -70,7 +70,7 @@ SIM_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
     // ******************************************
     if (simGetBooleanParameter(sim_boolparam_headless)>0)
     {
-        CColladaDialog::outputMsg(sim_verbosity_errors,"Collada plugin error: CoppeliaSim runs in headless mode. Cannot start 'Collada' plugin.");
+        CColladaDialog::outputMsg(sim_verbosity_errors,"simExtCollada: error: CoppeliaSim runs in headless mode. Cannot start 'Collada' plugin.");
         unloadSimLibrary(simLib);
         return(0); // Means error, CoppeliaSim will unload this plugin
     }
