@@ -31,8 +31,6 @@ public:
     explicit CColladaDialog(QWidget *parent = 0);
     ~CColladaDialog();
 
-    static bool canOutputMsg(int msgType);
-    static void outputMsg(int msgType,const char* msg);
     void refresh();
 
     void makeVisible(bool visible);
