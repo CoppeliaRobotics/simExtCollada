@@ -4,7 +4,7 @@ TARGET = simExtCollada
 TEMPLATE = lib
 
 DEFINES -= UNICODE
-CONFIG += shared
+CONFIG += shared plugin
 greaterThan(QT_MAJOR_VERSION,4): QT += widgets
 
 *-msvc* {
