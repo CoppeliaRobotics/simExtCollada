@@ -160,7 +160,7 @@ void CColladaDialog::handleCommands()
             simSetModuleMenuItemState(dialogMenuItemHandle,(cmd.boolParams[0]?3:1),"COLLADA import/export...");
         if (cmd.cmdId==IMPORT_CMD)
         {
-            simChar* pathAndFile=simFileDialog(sim_filedlg_type_load_multiple,"COLLADA import","","","DAE Files","dae");
+            char* pathAndFile=simFileDialog(sim_filedlg_type_load_multiple,"COLLADA import","","","DAE Files","dae");
             if (pathAndFile!=NULL)
             {
                 bool loadSuccess=true;
@@ -288,7 +288,7 @@ void CColladaDialog::handleCommands()
         }
         if (cmd.cmdId==EXPORT_CMD)
         {
-            simChar* pathAndFile=simFileDialog(sim_filedlg_type_save,"COLLADA export","","","DAE Files","dae");
+            char* pathAndFile=simFileDialog(sim_filedlg_type_save,"COLLADA export","","","DAE Files","dae");
             if (pathAndFile!=NULL)
             {
                 std::string file(pathAndFile);
@@ -469,7 +469,7 @@ void CColladaDialog::simulationEnded()
 {
     if (animationExporter!=NULL)
     {
-        simChar* pathAndFile=simFileDialog(sim_filedlg_type_save,"COLLADA animation export","","","DAE Files","dae");
+        char* pathAndFile=simFileDialog(sim_filedlg_type_save,"COLLADA animation export","","","DAE Files","dae");
         if (pathAndFile!=NULL)
         {
             std::string file(pathAndFile);
